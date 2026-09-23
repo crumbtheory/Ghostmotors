@@ -168,14 +168,6 @@
     box-shadow:0 0 18px rgba(242,201,76,.8);
     animation:route 4s linear infinite;
   }
-  .floating-note {
-    position:absolute; left:50%; transform:translateX(-50%); bottom:0; padding:11px 14px; border:1px solid rgba(255,255,255,.85);
-    background:rgba(255,255,255,.68); backdrop-filter:blur(16px); border-radius:14px; box-shadow:var(--shadow);
-    font-size:12px; color:#505967; animation:float-note 7s ease-in-out infinite;
-    min-width:250px; text-align:center;
-  }
-  .floating-note strong { display:block; font-size:18px; color:var(--ink); margin-bottom:2px; }
-
   section { padding:110px 0; }
   section[id], .path[id] { scroll-margin-top:86px; }
   .section-head { display:flex; justify-content:space-between; gap:32px; align-items:end; margin-bottom:58px; }
@@ -185,23 +177,37 @@
   }
   .section-head p { max-width:370px; color:var(--muted); line-height:1.6; margin:0; }
 
-  .pathways {
-    display:grid; grid-template-columns:1fr 1fr; gap:0; border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
+  .pathways { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  .path {
+    position:relative; overflow:clip; display:flex; flex-direction:column; min-width:0;
+    padding:30px; border:1px solid #e3e9f3; border-radius:26px;
+    background:linear-gradient(145deg,#fff 0%,#f3f7ff 100%);
+    box-shadow:0 20px 55px rgba(16,23,34,.06); transition:transform .3s ease, box-shadow .3s ease;
   }
-  .path { padding:44px 52px 48px 0; position:relative; display:flex; flex-direction:column; min-width:0; }
-  .path + .path { border-left:1px solid var(--line); padding-left:52px; padding-right:0; }
-  .path h3 { font-size:25px; margin:0 0 7px; }
-  .path > p { color:var(--muted); margin:0 0 36px; line-height:1.6; }
-  .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-bottom:28px; }
-  .step .num {
-    width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
-    background:#edf2ff; color:var(--blue); font-weight:900; margin-bottom:17px; font-size:12px;
+  .path:hover { transform:translateY(-5px); box-shadow:0 28px 65px rgba(16,23,34,.10); }
+  .path.dealer-path { background:linear-gradient(145deg,#fff 0%,#f8faff 58%,#fff9eb 100%); }
+  .path-label { color:#6f7d96; font-size:11px; font-weight:900; letter-spacing:.15em; text-transform:uppercase; }
+  .path h3 { font-size:27px; letter-spacing:-.025em; margin:13px 0 5px; }
+  .path-tagline { margin:0; color:#435472; font-size:16px; line-height:1.4; font-weight:700; }
+  .path-visual {
+    position:relative; height:176px; margin:24px 0 21px; border-radius:18px; overflow:clip;
+    background:radial-gradient(circle at 25% 55%,rgba(122,167,255,.22),transparent 38%),
+      linear-gradient(130deg,#f5f8ff,#edf3ff 68%,#fbfcff);
+    border:1px solid rgba(144,169,213,.18);
   }
-  .step:nth-child(2) .num { background:#fff6cf; color:#9c7600; }
-  .step:nth-child(3) .num { background:#f7edef; color:var(--red); }
-  .step b { display:block; font-size:15px; margin-bottom:8px; }
-  .step p { margin:0; color:var(--muted); font-size:13px; line-height:1.5; }
+  .dealer-path .path-visual {
+    background:radial-gradient(circle at 74% 20%,rgba(242,201,76,.20),transparent 33%),
+      linear-gradient(130deg,#f6f9ff,#eef4ff 70%,#fffaf0);
+  }
+  .path-visual svg { width:100%; height:100%; display:block; }
+  .art-line { stroke-dasharray:5 8; animation:art-flow 7s linear infinite; }
+  .art-float { animation:art-float 5s ease-in-out infinite; }
+  .art-growth { transform-origin:center; animation:art-growth 3.5s ease-in-out infinite; }
+  .path-points { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:0 0 20px; }
+  .path-points span { display:flex; gap:7px; align-items:flex-start; color:#435472; font-size:12px; font-weight:750; line-height:1.3; }
+  .path-points span::before { content:""; flex:none; width:7px; height:7px; margin-top:4px; border-radius:50%; background:var(--blue); }
+  .dealer-path .path-points span::before { background:#e7aa12; }
+  .path-benefit { color:#8b6510; font-size:12px; font-weight:800; margin:0 0 20px; }
   .path-link {
     align-self:flex-start; display:inline-flex; align-items:center; justify-content:center; gap:10px;
     min-height:44px; margin-top:auto; padding:10px 16px; border-radius:11px;
@@ -326,9 +332,11 @@
   .stagger.on > *:nth-child(5){transition-delay:.33s}
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
   @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(7px,-12px)} }
-  @keyframes float-note { 0%,100%{transform:translate(-50%,0)} 50%{transform:translate(-50%,-12px)} }
   @keyframes pulse { 0%,100%{transform:scale(1); opacity:.9} 50%{transform:scale(1.06); opacity:1} }
   @keyframes route { from{transform:translateX(-220px)} to{transform:translateX(260px)} }
+  @keyframes art-flow { to { stroke-dashoffset:-52; } }
+  @keyframes art-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+  @keyframes art-growth { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 
 
   .signal-strip{padding:26px 0 0; overflow:hidden;}
@@ -419,8 +427,6 @@
     .visual { height:320px; margin:-24px auto 0; overflow:clip; }
     .section-head { align-items:start; flex-direction:column; }
     .pathways, .faq-grid, .iq-grid { grid-template-columns:1fr; }
-    .path + .path { border-left:0; border-top:1px solid var(--line); padding-left:0; }
-    .path { padding-right:0; }
     .iq { padding:52px 28px; }
     .proof-line { grid-template-columns:1fr; gap:24px; }
     .slash { display:none; }
@@ -448,13 +454,14 @@
     .section-head { gap:16px; margin-bottom:32px; }
     .section-head h2 { font-size:clamp(36px,10vw,44px); }
     .section-head p { font-size:15px; }
-    .path { padding:32px 0; }
-    .path > p { margin-bottom:24px; }
-    .steps { grid-template-columns:1fr; gap:18px; }
-    .step { display:grid; grid-template-columns:30px minmax(0,1fr); column-gap:12px; }
-    .step .num { grid-row:1 / 3; margin:0; }
-    .step b { grid-column:2; margin-bottom:4px; }
-    .step p { grid-column:2; font-size:14px; }
+    .path { padding:22px; }
+    .path:hover { transform:none; }
+    .path h3 { font-size:25px; }
+    .path-tagline { font-size:15px; }
+    .path-visual { height:150px; margin:20px 0 18px; }
+    .path-points { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+    .path-points span { padding:7px 9px; border-radius:999px; background:rgba(255,255,255,.84); font-size:11px; }
+    .path-points span::before { margin-top:3px; }
     .path-link { align-self:stretch; }
     .why-grid { gap:28px; }
     .why-row { gap:14px; padding:22px 0; }
@@ -547,7 +554,6 @@
         <path d="M94 293 C245 338 552 339 684 296" fill="none" stroke="#101722" stroke-width="8" opacity=".82"/>
       </svg>
     </div>
-    <div class="floating-note"><strong>Inventory, faster.</strong>One network. Two sides of the market.</div>
   </div>
 </section>
 
@@ -567,28 +573,40 @@
         <div class="eyebrow"><i></i> One network, two paths</div>
         <h2>Two ways to move forward.</h2>
       </div>
-      <p>We handle the legwork for sellers and give dealers a direct way to find buyers, source vehicles, and close on their terms.</p>
     </div>
 
     <div class="pathways reveal">
-      <div class="path" id="customers">
-        <h3>For customers</h3>
-        <p>We work for you. Tell us about your vehicle once, and we'll shop it across our dealer network to find the strongest available offer.</p>
-        <div class="steps">
-          <div class="step"><div class="num">01</div><b>Tell us about your car</b><p>Share the vehicle, condition, and payoff details once.</p></div>
-          <div class="step"><div class="num">02</div><b>We shop for you</b><p>We reach out to dealers and compare their interest and offers.</p></div>
-          <div class="step"><div class="num">03</div><b>You choose</b><p>Review your options and decide whether to move forward.</p></div>
+      <div class="path customer-path" id="customers">
+        <span class="path-label">For customers</span>
+        <h3>We shop. You choose.</h3>
+        <p class="path-tagline">Tell us about your car once. We compare dealer offers for you.</p>
+        <div class="path-visual" aria-hidden="true">
+          <svg viewBox="0 0 500 170" preserveAspectRatio="xMidYMid meet">
+            <path class="art-line" d="M138 85 C177 85 182 35 224 35 M138 85 H224 M138 85 C177 85 182 135 224 135 M258 35 C301 35 301 85 346 85 M258 85 H346 M258 135 C301 135 301 85 346 85" fill="none" stroke="#73a3f8" stroke-width="3" stroke-linecap="round"/>
+            <g class="art-float"><rect x="24" y="52" width="120" height="68" rx="17" fill="#fff" stroke="#c8d8f5"/><path d="M44 91 L55 76 Q64 70 82 70 H105 Q115 72 124 91 Z" fill="#dce9ff" stroke="#346adf" stroke-width="2"/><path d="M55 78 H112" stroke="#346adf" stroke-width="2"/><circle cx="61" cy="94" r="6" fill="#172541"/><circle cx="107" cy="94" r="6" fill="#172541"/></g>
+            <g fill="#fff" stroke="#7aa8f7" stroke-width="2"><circle cx="241" cy="35" r="18"/><circle cx="241" cy="85" r="18"/><circle cx="241" cy="135" r="18"/></g>
+            <g fill="none" stroke="#3269dc" stroke-width="2" stroke-linejoin="round"><path d="M232 39 V31 H250 V39 M230 31 L241 25 L252 31 M237 39 V34 H245 V39"/><path d="M232 89 V81 H250 V89 M230 81 L241 75 L252 81 M237 89 V84 H245 V89"/><path d="M232 139 V131 H250 V139 M230 131 L241 125 L252 131 M237 139 V134 H245 V139"/></g>
+            <g class="art-float"><rect x="347" y="52" width="130" height="68" rx="16" fill="#fff" stroke="#c8d8f5"/><text x="365" y="76" fill="#263956" font-size="13" font-weight="800">OFFERS</text><rect x="365" y="88" width="28" height="16" rx="4" fill="#dce9ff"/><rect x="400" y="82" width="28" height="22" rx="4" fill="#a9c8ff"/><rect x="435" y="76" width="26" height="28" rx="4" fill="#2d64f3"/></g>
+          </svg>
         </div>
+        <div class="path-points"><span>Share once</span><span>We compare</span><span>You decide</span></div>
         <a class="path-link" href="https://forms.gle/uVAF91x5bxfbbbyC8" target="_blank" rel="noopener">Get offers for your vehicle <span aria-hidden="true">→</span></a>
       </div>
-      <div class="path" id="dealers">
-        <h3>For dealers</h3>
-        <p>Buy, sell, or trade inventory through our network. We bring more leads and highlight your vehicles to relevant dealers while you stay in control of the deal.</p>
-        <div class="steps">
-          <div class="step"><div class="num">01</div><b>Set your terms</b><p>Choose what to share, your price, and which leads to pursue.</p></div>
-          <div class="step"><div class="num">02</div><b>Get more exposure</b><p>We highlight inventory and connect you with interested dealers.</p></div>
-          <div class="step"><div class="num">03</div><b>Trade directly</b><p>Negotiate on your terms without high auction fees.</p></div>
+      <div class="path dealer-path" id="dealers">
+        <span class="path-label">For dealers</span>
+        <h3>We bring leads. You scale.</h3>
+        <p class="path-tagline">We spotlight your inventory and connect you with dealers to buy or sell directly.</p>
+        <div class="path-visual" aria-hidden="true">
+          <svg viewBox="0 0 500 170" preserveAspectRatio="xMidYMid meet">
+            <path class="art-line" d="M70 34 C120 34 137 80 190 80 M70 85 H190 M70 136 C120 136 137 90 190 90" fill="none" stroke="#73a3f8" stroke-width="3" stroke-linecap="round"/>
+            <g fill="#fff" stroke="#7aa8f7" stroke-width="2"><circle cx="53" cy="34" r="17"/><circle cx="53" cy="85" r="17"/><circle cx="53" cy="136" r="17"/></g>
+            <g fill="#2d64f3"><circle cx="53" cy="29" r="4"/><path d="M44 43 Q53 32 62 43"/><circle cx="53" cy="80" r="4"/><path d="M44 94 Q53 83 62 94"/><circle cx="53" cy="131" r="4"/><path d="M44 145 Q53 134 62 145"/></g>
+            <g class="art-float"><rect x="187" y="42" width="137" height="92" rx="16" fill="#fff" stroke="#c8d8f5"/><path d="M202 69 L214 53 H297 L309 69 Z" fill="#a9c8ff" stroke="#2d64f3" stroke-width="2"/><rect x="205" y="69" width="102" height="48" rx="4" fill="#f1f6ff" stroke="#2d64f3" stroke-width="2"/><rect x="217" y="80" width="25" height="16" rx="2" fill="#c8dcff"/><rect x="270" y="80" width="25" height="16" rx="2" fill="#c8dcff"/><rect x="246" y="93" width="20" height="24" rx="2" fill="#fff" stroke="#2d64f3" stroke-width="2"/></g>
+            <g class="art-growth"><path d="M350 124 L382 100 L408 108 L455 49" fill="none" stroke="#e7aa12" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M438 49 H455 V67" fill="none" stroke="#e7aa12" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g>
+          </svg>
         </div>
+        <div class="path-points"><span>More leads</span><span>Your terms</span><span>Direct trades</span></div>
+        <p class="path-benefit">No high auction fees</p>
         <a class="path-link" href="https://forms.gle/ngZRGVnKfRn4CiXC7" target="_blank" rel="noopener">Join the dealer network <span aria-hidden="true">→</span></a>
       </div>
     </div>
