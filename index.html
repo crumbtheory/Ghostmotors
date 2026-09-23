@@ -203,7 +203,7 @@
   .step p { margin:0; color:var(--muted); font-size:13px; line-height:1.5; }
 
   .iq {
-    position:relative; overflow:hidden;
+    position:relative; overflow:clip;
     background:linear-gradient(135deg,#0f1725 0%,#151f31 65%,#192d59 100%);
     color:#fff; border-radius:34px; padding:72px 64px; min-height:620px;
     box-shadow:0 30px 100px rgba(13,27,55,.18);
@@ -225,41 +225,34 @@
     margin-top:34px; display:flex; flex-wrap:wrap; gap:14px 24px; font-size:13px; color:#d7deea;
   }
   .feature-line span::before { content:"•"; color:var(--yellow); margin-right:8px; }
-  .dashboard {
-    position:relative; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08);
-    border-radius:26px; padding:16px; backdrop-filter:blur(12px); box-shadow:0 35px 80px rgba(0,0,0,.28);
-    transform:rotate(-1.6deg); transition:transform .4s ease;
+  .iq-carousel {
+    min-width:0; padding:12px; border:1px solid rgba(255,255,255,.18);
+    border-radius:24px; background:rgba(255,255,255,.08);
+    box-shadow:0 35px 80px rgba(0,0,0,.28);
   }
-  .dashboard:hover { transform:rotate(0deg) translateY(-5px); }
-  .dash-inner { background:#f7f9fc; color:#101722; border-radius:18px; min-height:410px; overflow:hidden; display:grid; grid-template-columns:125px 1fr; }
-  .side { background:#f0f3f8; padding:20px 12px; border-right:1px solid #e5e9ef; }
-  .ghostiq { font-weight:950; letter-spacing:-.03em; color:#16203a; margin:2px 0 26px; }
-  .ghostiq i { color:var(--red); font-style:normal; }
-  .side a { display:block; padding:10px 9px; border-radius:9px; font-size:10px; color:#6a7381; margin-bottom:4px; }
-  .side a.active { background:#fff; color:var(--blue); font-weight:800; box-shadow:0 6px 18px rgba(16,23,34,.06); }
-  .main { padding:22px; }
-  .dash-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:26px; }
-  .dash-top strong { font-size:17px; }
-  .pill { font-size:9px; background:#eaf0ff; color:var(--blue); padding:7px 10px; border-radius:99px; }
-  .metric { display:flex; justify-content:space-between; align-items:end; border-bottom:1px solid #e6eaf0; padding-bottom:18px; margin-bottom:22px; }
-  .metric small { color:#7b8491; }
-  .metric b { font-size:26px; letter-spacing:-.03em; }
-  .chart { height:108px; position:relative; }
-  .chart svg { width:100%; height:100%; }
-  .inventory {
-    display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;
+  .iq-slides {
+    display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scroll-behavior:smooth;
+    border-radius:16px; scrollbar-width:none; overscroll-behavior-x:contain;
   }
-  .vehicle-row {
-    background:#fff; border:1px solid #e6eaf0; border-radius:12px; padding:12px;
-    display:flex; gap:10px; align-items:center;
+  .iq-slides::-webkit-scrollbar { display:none; }
+  .iq-slide { flex:0 0 100%; min-width:0; margin:0; scroll-snap-align:start; position:relative; }
+  .iq-slide img { display:block; width:100%; height:auto; aspect-ratio:1672 / 941; object-fit:contain; background:#fff; }
+  .iq-slide figcaption {
+    position:absolute; left:12px; bottom:12px; padding:7px 10px; border-radius:8px;
+    background:rgba(13,23,42,.88); color:#fff; font-size:11px; font-weight:700;
+    letter-spacing:.02em;
   }
-  .mini-car {
-    width:44px; height:22px; border-radius:9px 14px 7px 7px;
-    background:linear-gradient(145deg,#5c6674,#1d2632); position:relative;
+  .iq-controls { display:flex; justify-content:center; align-items:center; gap:16px; padding:14px 4px 2px; }
+  .iq-arrow {
+    display:grid; place-items:center; width:34px; height:34px; border-radius:50%;
+    border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08);
+    color:#fff; font-size:22px; line-height:1; cursor:pointer;
   }
-  .mini-car::before { content:""; position:absolute; width:26px; height:10px; left:8px; top:-6px; border-radius:12px 12px 2px 2px; background:#8390a0; }
-  .vehicle-row b { font-size:10px; display:block; }
-  .vehicle-row small { color:#7d8794; font-size:8px; }
+  .iq-arrow:hover,.iq-arrow:focus-visible { background:rgba(255,255,255,.22); }
+  .iq-dots { display:flex; gap:9px; align-items:center; }
+  .iq-dot { width:9px; height:9px; padding:0; border:0; border-radius:50%; background:#7989a5; cursor:pointer; }
+  .iq-dot[aria-current="true"] { width:22px; border-radius:99px; background:var(--yellow); }
+  .iq-arrow:focus-visible,.iq-dot:focus-visible { outline:2px solid var(--yellow); outline-offset:3px; }
 
   .proof {
     padding:88px 0 34px;
@@ -428,8 +421,9 @@
     .trust-item { min-width:135px; }
     .steps { grid-template-columns:1fr; }
     .step { border-left:2px solid #edf0f5; padding-left:18px; }
-    .dash-inner { grid-template-columns:92px 1fr; }
-    .inventory { grid-template-columns:1fr; }
+    .iq { padding:42px 18px; }
+    .iq-grid { gap:30px; }
+    .iq-slide figcaption { left:8px; bottom:8px; font-size:10px; }
     .footer { grid-template-columns:1fr; }
     .why-row{grid-template-columns:48px 1fr;}
     .legal { flex-direction:column; }
@@ -593,32 +587,39 @@
           </div>
         </div>
 
-        <div class="dashboard">
-          <div class="dash-inner">
-            <aside class="side">
-              <div class="ghostiq">GHOST<i>IQ</i></div>
-              <a class="active">Overview</a><a>Inventory</a><a>Network</a><a>Pricing</a><a>Automation</a>
-            </aside>
-            <div class="main">
-              <div class="dash-top"><strong>Opportunity engine</strong><span class="pill">237 dealers live</span></div>
-              <div class="metric">
-                <div><small>Estimated opportunity</small><br><b>$184,200</b></div>
-                <span class="pill">+18% this week</span>
-              </div>
-              <div class="chart">
-                <svg viewBox="0 0 500 120" preserveAspectRatio="none">
-                  <path d="M0 92 C65 88 80 48 135 61 S220 83 260 49 S330 28 372 42 S430 23 500 16" fill="none" stroke="#2d64f3" stroke-width="4"/>
-                  <path d="M0 105 L0 92 C65 88 80 48 135 61 S220 83 260 49 S330 28 372 42 S430 23 500 16 L500 105 Z" fill="rgba(45,100,243,.10)"/>
-                  <path d="M340 44 L500 16" stroke="#f2c94c" stroke-width="3" stroke-dasharray="7 7"/>
-                </svg>
-              </div>
-              <div class="inventory">
-                <div class="vehicle-row"><div class="mini-car"></div><div><b>2024 Performance Sedan</b><small>High match · strong spread</small></div></div>
-                <div class="vehicle-row"><div class="mini-car"></div><div><b>2023 Luxury SUV</b><small>Network demand increasing</small></div></div>
-                <div class="vehicle-row"><div class="mini-car"></div><div><b>2022 EV Crossover</b><small>Pricing window detected</small></div></div>
-                <div class="vehicle-row"><div class="mini-car"></div><div><b>2024 Sport Coupe</b><small>Fast-turn opportunity</small></div></div>
-              </div>
+        <div class="iq-carousel" role="region" aria-roledescription="carousel" aria-label="GhostIQ platform previews">
+          <div class="iq-slides" id="iqSlides" aria-live="off">
+            <figure class="iq-slide" role="group" aria-roledescription="slide" aria-label="1 of 5: Dealer Network">
+              <img src="assets/ghostplatform1.png" alt="GhostIQ Dealer Network dashboard" width="1672" height="941" loading="lazy" decoding="async">
+              <figcaption>01 / 05 · Dealer Network</figcaption>
+            </figure>
+            <figure class="iq-slide" role="group" aria-roledescription="slide" aria-label="2 of 5: Market Intelligence">
+              <img src="assets/ghostplatform2.png" alt="GhostIQ Market Intelligence dashboard" width="1672" height="941" loading="lazy" decoding="async">
+              <figcaption>02 / 05 · Market Intelligence</figcaption>
+            </figure>
+            <figure class="iq-slide" role="group" aria-roledescription="slide" aria-label="3 of 5: AI Sourcing">
+              <img src="assets/ghostplatform3.png" alt="GhostIQ AI Sourcing dashboard" width="1672" height="941" loading="lazy" decoding="async">
+              <figcaption>03 / 05 · AI Sourcing</figcaption>
+            </figure>
+            <figure class="iq-slide" role="group" aria-roledescription="slide" aria-label="4 of 5: Dealer Chat">
+              <img src="assets/ghostplatform4.png" alt="GhostIQ Dealer Chat dashboard" width="1672" height="941" loading="lazy" decoding="async">
+              <figcaption>04 / 05 · Dealer Chat</figcaption>
+            </figure>
+            <figure class="iq-slide" role="group" aria-roledescription="slide" aria-label="5 of 5: Overview">
+              <img src="assets/ghostplatform5.png" alt="GhostIQ Overview dashboard" width="1672" height="941" loading="lazy" decoding="async">
+              <figcaption>05 / 05 · Overview</figcaption>
+            </figure>
+          </div>
+          <div class="iq-controls" aria-label="Carousel controls">
+            <button class="iq-arrow" id="iqPrevious" type="button" aria-label="Previous GhostIQ image">‹</button>
+            <div class="iq-dots" aria-label="Choose GhostIQ image">
+              <button class="iq-dot" type="button" data-slide="0" aria-label="Show image 1 of 5" aria-current="true"></button>
+              <button class="iq-dot" type="button" data-slide="1" aria-label="Show image 2 of 5"></button>
+              <button class="iq-dot" type="button" data-slide="2" aria-label="Show image 3 of 5"></button>
+              <button class="iq-dot" type="button" data-slide="3" aria-label="Show image 4 of 5"></button>
+              <button class="iq-dot" type="button" data-slide="4" aria-label="Show image 5 of 5"></button>
             </div>
+            <button class="iq-arrow" id="iqNext" type="button" aria-label="Next GhostIQ image">›</button>
           </div>
         </div>
       </div>
@@ -725,18 +726,8 @@
     progress.style.width = pct + '%';
 
     const visual = document.querySelector('.visual');
-    const dash = document.querySelector('.dashboard');
-
     if (visual && y < 900) {
       visual.style.transform = `translateY(${y * .035}px)`;
-    }
-
-    if (dash) {
-      const r = dash.getBoundingClientRect();
-      if (r.top < window.innerHeight && r.bottom > 0) {
-        const centerOffset = (window.innerHeight / 2 - (r.top + r.height / 2)) / window.innerHeight;
-        dash.style.translate = `0 ${centerOffset * 18}px`;
-      }
     }
   }
 
@@ -753,6 +744,66 @@
   }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
 
   document.querySelectorAll('.reveal:not(.on), .reveal-left, .reveal-right').forEach(el => reveal.observe(el));
+
+  const iqCarousel = document.querySelector('.iq-carousel');
+  const iqSlides = document.getElementById('iqSlides');
+  const iqDots = [...iqCarousel.querySelectorAll('.iq-dot')];
+  const iqMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let iqIndex = 0;
+  let iqTimer;
+  let iqVisible = false;
+  let iqPointerOver = false;
+
+  function showIqSlide(index) {
+    const previous = iqIndex;
+    iqIndex = (index + iqDots.length) % iqDots.length;
+    iqSlides.scrollTo({
+      left: iqIndex * iqSlides.clientWidth,
+      behavior: iqMotion.matches || (previous === iqDots.length - 1 && iqIndex === 0) ? 'instant' : 'smooth'
+    });
+    iqDots.forEach((dot, position) => {
+      if (position === iqIndex) dot.setAttribute('aria-current', 'true');
+      else dot.removeAttribute('aria-current');
+    });
+  }
+
+  function stopIqAutoplay() {
+    clearInterval(iqTimer);
+    iqTimer = undefined;
+  }
+
+  function startIqAutoplay() {
+    stopIqAutoplay();
+    if (!iqVisible || iqPointerOver || iqCarousel.contains(document.activeElement) ||
+        document.hidden || iqMotion.matches) return;
+    iqTimer = setInterval(() => showIqSlide(iqIndex + 1), 5500);
+  }
+
+  iqCarousel.querySelector('#iqPrevious').addEventListener('click', () => showIqSlide(iqIndex - 1));
+  iqCarousel.querySelector('#iqNext').addEventListener('click', () => showIqSlide(iqIndex + 1));
+  iqDots.forEach((dot, index) => dot.addEventListener('click', () => showIqSlide(index)));
+
+  iqSlides.addEventListener('scroll', () => {
+    iqIndex = Math.max(0, Math.min(iqDots.length - 1,
+      Math.round(iqSlides.scrollLeft / iqSlides.clientWidth)));
+    iqDots.forEach((dot, position) => {
+      if (position === iqIndex) dot.setAttribute('aria-current', 'true');
+      else dot.removeAttribute('aria-current');
+    });
+  }, { passive: true });
+
+  iqCarousel.addEventListener('pointerenter', () => { iqPointerOver = true; stopIqAutoplay(); });
+  iqCarousel.addEventListener('pointerleave', () => { iqPointerOver = false; startIqAutoplay(); });
+  iqCarousel.addEventListener('pointerdown', stopIqAutoplay);
+  iqCarousel.addEventListener('pointerup', startIqAutoplay);
+  iqCarousel.addEventListener('focusin', stopIqAutoplay);
+  iqCarousel.addEventListener('focusout', () => setTimeout(startIqAutoplay, 0));
+  document.addEventListener('visibilitychange', startIqAutoplay);
+  iqMotion.addEventListener('change', startIqAutoplay);
+  new IntersectionObserver(([entry]) => {
+    iqVisible = entry.isIntersecting;
+    startIqAutoplay();
+  }, { threshold: 0.3 }).observe(iqCarousel);
 
   document.querySelector('.menu').addEventListener('click', () => {
     const nav = document.querySelector('.navlinks');
