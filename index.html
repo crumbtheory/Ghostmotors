@@ -124,20 +124,21 @@
   .btn.secondary { background:#fff; border-color:#d9dee6; }
   .btn .dot { width:7px; height:7px; border-radius:99px; background:var(--yellow); }
   .trust {
-    display:flex; gap:38px; margin-top:20px; color:#414a57; flex-wrap:wrap; justify-content:center;
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); width:min(100%,680px);
+    margin-top:34px; padding-top:21px; border-top:1px solid #d8e1ee;
     position:relative; z-index:5;
   }
-  .trust-item { display:flex; align-items:center; gap:10px; min-width:150px; }
-  .trust-icon {
-    width:34px; height:34px; border-radius:10px; background:#eef3ff; display:grid; place-items:center;
-    color:var(--blue); font-size:16px; font-weight:900;
-  }
-  .trust b { display:block; font-size:18px; line-height:1; color:var(--ink); }
-  .trust span { font-size:12px; }
+  .trust-item { position:relative; padding:0 24px; text-align:left; }
+  .trust-item + .trust-item { border-left:1px solid #d8e1ee; }
+  .trust-item::before { content:""; position:absolute; top:-23px; left:24px; width:26px; height:3px; border-radius:99px; background:var(--blue); }
+  .trust-item:nth-child(2)::before { background:var(--yellow); }
+  .trust-item:nth-child(3)::before { background:var(--red); }
+  .trust b { display:block; font-size:27px; line-height:1; letter-spacing:-.045em; color:var(--ink); }
+  .trust span { display:block; margin-top:7px; color:#64738a; font-size:10px; letter-spacing:.07em; font-weight:800; text-transform:uppercase; }
 
   .visual {
     position:relative; height:410px; width:min(100%, 930px);
-    margin:-42px auto -4px;
+    margin:-42px auto -4px; overflow:hidden;
   }
   .speed-lines { position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
   .speed-line {
@@ -146,24 +147,13 @@
     box-shadow:0 0 16px rgba(45,100,243,.15);
     animation:speed-sweep var(--dur) linear var(--delay) infinite;
   }
-  .speed-line:nth-child(3n) { height:2px; background:linear-gradient(90deg,transparent,rgba(242,201,76,.6),transparent); }
+  .speed-line:nth-child(3n) { height:2px; background:linear-gradient(90deg,transparent,rgba(213,31,46,.65),transparent); }
   @keyframes speed-sweep { from { transform:translateX(980px) skewX(-25deg); opacity:0; } 9%,78% { opacity:1; } to { transform:translateX(-480px) skewX(-25deg); opacity:0; } }
   .halo {
-    position:absolute; width:350px; height:350px; border-radius:50%; right:5%; top:18px;
+    position:absolute; width:430px; height:360px; border-radius:50%; left:28%; top:12px;
     background:
-      radial-gradient(circle at 44% 40%,rgba(255,255,255,.95) 0 20%,transparent 21%),
-      radial-gradient(circle,rgba(122,167,255,.35),rgba(45,100,243,.05) 62%,transparent 63%);
-    filter:blur(.1px); animation:float 7s ease-in-out infinite;
-  }
-  .sun {
-    position:absolute; width:82px; height:82px; border-radius:50%; right:8%; top:22px;
-    background:linear-gradient(145deg,#ffe58d,var(--yellow)); box-shadow:0 0 55px rgba(242,201,76,.33);
-    animation:pulse 5s ease-in-out infinite;
-  }
-  .orb {
-    position:absolute; width:30px; height:30px; border-radius:50%; left:10%; top:108px;
-    background:linear-gradient(145deg,#fff,#c7d8ff); box-shadow:0 15px 30px rgba(45,100,243,.16);
-    animation:float2 6s ease-in-out infinite;
+      radial-gradient(circle at 56% 50%,rgba(255,255,255,.95) 0 18%,rgba(200,219,255,.5) 48%,rgba(45,100,243,.06) 66%,transparent 72%);
+    animation:float 7s ease-in-out infinite;
   }
   .car-stage {
     position:absolute; inset:18px -8px 0 0; z-index:2; display:flex; align-items:center; justify-content:center;
@@ -176,6 +166,21 @@
   @keyframes wheel-roll { to { transform:rotate(360deg); } }
   @keyframes car-enter { from { transform:translate3d(-130px,8px,0) scale(.96); opacity:0; filter:blur(7px); } to { transform:translate3d(0,0,0) scale(1); opacity:1; filter:blur(0); } }
   @keyframes car-surge { 0%,100% { transform:translate3d(-7px,2px,0) rotate(-.25deg); } 50% { transform:translate3d(10px,-3px,0) rotate(.15deg); } }
+  .ghost-stage { position:absolute; inset:0; z-index:3; pointer-events:none; }
+  .ghost-racer {
+    position:absolute; left:7%; top:16%; width:135px; aspect-ratio:445 / 299;
+    --travel:850px;
+    animation:ghost-race 3.6s linear infinite;
+  }
+  .ghost-racer::before {
+    content:""; position:absolute; inset:18% 8%; z-index:-1; border-radius:50%;
+    background:rgba(213,31,46,.2); filter:blur(18px); transform:translateX(-16px);
+  }
+  .ghost-racer img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; }
+  .ghost-racer .ghost-echo { opacity:0; animation:ghost-trail 1.15s ease-out infinite; }
+  .ghost-racer .ghost-echo.second { animation-delay:-.57s; }
+  @keyframes ghost-race { 0% { transform:translate3d(-170px,18px,0) rotate(-8deg); opacity:0; filter:blur(10px); } 10% { opacity:1; filter:blur(0); } 66% { transform:translate3d(var(--travel),-18px,0) rotate(2deg); opacity:1; filter:blur(0); } 76%,100% { transform:translate3d(var(--travel),-18px,0) rotate(2deg); opacity:0; } }
+  @keyframes ghost-trail { from { transform:translateX(-8px) scale(.98); opacity:.25; filter:blur(1px); } to { transform:translateX(-75px) scale(.86); opacity:0; filter:blur(10px); } }
   .road-motion { position:absolute; left:4%; right:4%; bottom:33px; height:5px; z-index:0; opacity:.65; background:repeating-linear-gradient(90deg,rgba(45,100,243,.38) 0 42px,transparent 42px 112px); background-size:336px 5px; animation:road-rush .85s linear infinite; mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent); }
   @keyframes road-rush { to { background-position:-336px 0; } }
   .route {
@@ -258,9 +263,14 @@
   .iq h2 span { color:#a8c5ff; }
   .iq p { color:#b5c0d0; line-height:1.65; max-width:480px; }
   .feature-line {
-    margin-top:34px; display:flex; flex-wrap:wrap; gap:14px 24px; font-size:13px; color:#d7deea;
+    margin-top:28px; display:flex; flex-wrap:wrap; gap:9px; font-size:12px; color:#e5ecf8;
   }
-  .feature-line span::before { content:"•"; color:var(--yellow); margin-right:8px; }
+  .feature-line span { display:inline-flex; align-items:center; gap:8px; padding:9px 12px; border-radius:999px; border:1px solid rgba(168,197,255,.22); background:rgba(168,197,255,.08); }
+  .feature-line span::before { content:""; width:6px; height:6px; flex:none; border-radius:50%; background:var(--yellow); box-shadow:0 0 13px rgba(242,201,76,.55); animation:feature-glow 3s ease-in-out infinite; }
+  .feature-line span:nth-child(2)::before { animation-delay:.5s; }
+  .feature-line span:nth-child(3)::before { animation-delay:1s; }
+  .feature-line span:nth-child(4)::before { animation-delay:1.5s; }
+  @keyframes feature-glow { 50% { transform:scale(1.6); box-shadow:0 0 20px rgba(242,201,76,.9); } }
   .iq-carousel {
     min-width:0; padding:12px; border:1px solid rgba(255,255,255,.18);
     border-radius:24px; background:rgba(255,255,255,.08);
@@ -378,19 +388,33 @@
     box-shadow:0 0 14px rgba(242,201,76,.55);
   }
 
-  .why-grid{display:grid; grid-template-columns:.92fr 1.08fr; gap:80px; align-items:start;}
-  .why-copy{position:sticky; top:130px;}
-  .why-copy h2{font-size:clamp(40px,5vw,64px); line-height:.98; letter-spacing:-.05em; margin:16px 0 20px;}
-  .why-copy p{color:var(--muted); line-height:1.7; max-width:520px;}
-  .why-list{border-top:1px solid var(--line);}
-  .why-row{
-    display:grid; grid-template-columns:72px 1fr; gap:24px; padding:30px 0;
-    border-bottom:1px solid var(--line);
+  .why-head { max-width:790px; margin-bottom:38px; }
+  .why-head h2 { font-size:clamp(40px,5vw,62px); line-height:1; letter-spacing:-.05em; margin:15px 0 14px; }
+  .why-head p { color:var(--muted); line-height:1.6; margin:0; font-size:16px; }
+  .network-board { display:grid; gap:14px; }
+  .flow-caption { display:block; margin:0 0 9px 5px; color:#6b7890; font-size:11px; font-weight:900; letter-spacing:.15em; text-transform:uppercase; }
+  .flow-lane {
+    display:grid; grid-template-columns:minmax(0,1fr) 74px minmax(0,1fr) 74px minmax(0,1fr);
+    align-items:center; gap:8px; padding:18px; border:1px solid #dce7f6; border-radius:24px;
+    background:linear-gradient(110deg,#f5f8ff,#fff 52%,#f5f8ff);
+    box-shadow:0 16px 44px rgba(20,42,77,.05);
   }
-  .why-row .index{font-size:12px; color:#9aa2ad; font-weight:900; letter-spacing:.12em;}
-  .why-row h3{margin:0 0 9px; font-size:22px; letter-spacing:-.02em;}
-  .why-row p{margin:0; color:var(--muted); line-height:1.6; font-size:14px;}
-  .why-row strong{color:var(--blue);}
+  .flow-lane.dealer-lane { background:linear-gradient(110deg,#fffaf0,#fff 52%,#f4f8ff); }
+  .flow-node { min-width:0; min-height:98px; padding:15px; display:flex; align-items:center; gap:12px; border:1px solid #dde7f5; border-radius:17px; background:rgba(255,255,255,.88); }
+  .flow-node.hub { border-color:#bdcffa; background:#edf3ff; }
+  .flow-icon { width:44px; height:44px; flex:none; display:grid; place-items:center; border-radius:13px; background:#e9f1ff; color:#2d64f3; }
+  .flow-icon svg { width:27px; height:27px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+  .flow-node.hub .flow-icon { background:#fff; }
+  .flow-node.hub img { width:35px; height:35px; object-fit:contain; mix-blend-mode:multiply; }
+  .flow-node b { display:block; font-size:15px; letter-spacing:-.02em; }
+  .flow-node small { display:block; color:#6a7890; font-size:12px; margin-top:4px; line-height:1.35; }
+  .flow-link { position:relative; height:2px; background:#bed3f6; overflow:hidden; }
+  .flow-link::after { content:""; position:absolute; width:28px; height:2px; left:-30px; top:0; background:linear-gradient(90deg,transparent,#2d64f3); box-shadow:0 0 12px #2d64f3; animation:network-flow 1.7s linear infinite; }
+  .flow-lane.dealer-lane .flow-link::after { background:linear-gradient(90deg,transparent,#e5aa18); box-shadow:0 0 12px #e5aa18; }
+  .flow-link:nth-of-type(4)::after { animation-delay:.35s; }
+  @keyframes network-flow { to { left:100%; } }
+  .network-note { display:inline-flex; align-items:center; gap:10px; margin-top:20px; color:#405374; font-size:13px; font-weight:800; }
+  .network-note::before { content:"↔"; display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:#eaf1ff; color:var(--blue); font-size:17px; }
 
   footer{
     margin-top:110px; position:relative; padding:90px 0 34px;
@@ -453,8 +477,6 @@
     .proof-line { grid-template-columns:1fr; gap:24px; }
     .slash { display:none; }
     .footer { grid-template-columns:1fr 1fr; }
-    .why-grid{grid-template-columns:1fr; gap:40px;}
-    .why-copy{position:relative; top:auto;}
     .footer-cta{align-items:flex-start; flex-direction:column;}
   }
   @media (max-width: 620px) {
@@ -470,11 +492,14 @@
     .visual { height:265px; margin:-8px auto 0; }
     .speed-line { height:2px; }
     .road-motion { bottom:30px; }
-    .halo { width:245px; height:245px; }
+    .halo { width:245px; height:245px; left:18%; top:10px; }
     .car-stage { inset:8px -8px 0 -8px; }
-    .trust { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; width:100%; margin-top:18px; }
-    .trust-item { min-width:0; justify-content:center; }
-    .trust-item:last-child { grid-column:1 / -1; }
+    .ghost-racer { left:5%; top:15%; width:78px; --travel:430px; }
+    .trust { width:100%; margin-top:28px; padding-top:17px; }
+    .trust-item { padding:0 8px; text-align:center; }
+    .trust-item::before { top:-19px; left:calc(50% - 12px); width:24px; }
+    .trust b { font-size:20px; }
+    .trust span { font-size:9px; line-height:1.25; letter-spacing:.03em; }
     .section-head { gap:16px; margin-bottom:32px; }
     .section-head h2 { font-size:clamp(36px,10vw,44px); }
     .section-head p { font-size:15px; }
@@ -487,9 +512,15 @@
     .path-points span { padding:7px 9px; border-radius:999px; background:rgba(255,255,255,.84); font-size:11px; }
     .path-points span::before { margin-top:3px; }
     .path-link { align-self:stretch; }
-    .why-grid { gap:28px; }
-    .why-row { gap:14px; padding:22px 0; }
-    .why-row h3 { font-size:20px; }
+    .why-head { margin-bottom:26px; }
+    .why-head h2 { font-size:clamp(36px,10vw,44px); }
+    .why-head p { font-size:15px; }
+    .flow-lane { grid-template-columns:1fr; gap:0; padding:14px; }
+    .flow-node { min-height:76px; }
+    .flow-link { width:2px; height:26px; justify-self:center; }
+    .flow-link::after { width:2px; height:12px; left:0; top:-12px; background:linear-gradient(180deg,transparent,#2d64f3); animation:network-flow-vertical 1.4s linear infinite; }
+    .flow-lane.dealer-lane .flow-link::after { background:linear-gradient(180deg,transparent,#e5aa18); }
+    @keyframes network-flow-vertical { to { top:100%; } }
     .iq { min-height:0; padding:34px 16px; }
     .iq-grid { gap:30px; }
     .iq h2 { font-size:clamp(38px,10vw,48px); }
@@ -503,7 +534,6 @@
     .faq { padding-top:60px; }
     .faq-grid { gap:32px; }
     .footer { grid-template-columns:1fr; }
-    .why-row{grid-template-columns:48px 1fr;}
     .legal { flex-direction:column; }
     footer { margin-top:60px; padding:64px 0 30px; }
     .footer-cta { margin-bottom:40px; padding-bottom:34px; gap:20px; }
@@ -546,16 +576,16 @@
 <section class="hero wrap">
   <div class="hero-copy reveal on">
     <div class="eyebrow"><i></i> Dealer network · consumer buyouts</div>
-    <h1>Move cars.<br><span class="accent">Not paperwork.</span></h1>
-    <p>Selling your vehicle? We shop our dealer network for offers on your behalf. Dealers get more leads, more visibility for inventory, and direct trading opportunities without high auction fees.</p>
+    <h1>Your Vehicle.<br><span class="accent">Our Network.</span></h1>
+    <p>We shop dealer offers for sellers and bring dealerships more leads, inventory exposure, and direct trading opportunities.</p>
     <div class="actions">
       <a class="btn primary" href="https://forms.gle/uVAF91x5bxfbbbyC8" target="_blank" rel="noopener">For Customers <span>→</span></a>
       <a class="btn secondary" href="https://forms.gle/ngZRGVnKfRn4CiXC7" target="_blank" rel="noopener"><span class="dot"></span> For Dealers <span>→</span></a>
     </div>
     <div class="trust stagger reveal">
-      <div class="trust-item"><div class="trust-icon">↔</div><div><b>237</b><span>Dealer network</span></div></div>
-      <div class="trust-item"><div class="trust-icon">30</div><div><b>30 min</b><span>Target offer time</span></div></div>
-      <div class="trust-item"><div class="trust-icon">$</div><div><b>Strong</b><span>Buyout pricing</span></div></div>
+      <div class="trust-item"><b>237</b><span>Dealer network</span></div>
+      <div class="trust-item"><b>30 min</b><span>Target offer time</span></div>
+      <div class="trust-item"><b>Strong</b><span>Buyout pricing</span></div>
     </div>
   </div>
 
@@ -567,7 +597,7 @@
       <span class="speed-line" style="--y:68%;--w:275px;--dur:1.15s;--delay:-.2s"></span>
       <span class="speed-line" style="--y:78%;--w:160px;--dur:1.6s;--delay:-1.3s"></span>
     </div>
-    <div class="halo"></div><div class="sun"></div><div class="orb"></div><div class="route"></div>
+    <div class="halo" aria-hidden="true"></div><div class="route" aria-hidden="true"></div>
     <div class="road-motion" aria-hidden="true"></div>
     <div class="car-stage">
       <svg class="car-svg" viewBox="0 0 760 400" aria-label="Stylized performance car illustration">
@@ -588,6 +618,13 @@
         <g class="wheel-spin front" stroke="#cdd6e1" stroke-width="6" stroke-linecap="round"><path d="M585 284v62M554 315h62M563 293l44 44M563 337l44-44"/></g><ellipse cx="585" cy="315" rx="18" ry="18" fill="#dce2e9"/>
         <path d="M94 293 C245 338 552 339 684 296" fill="none" stroke="#101722" stroke-width="8" opacity=".82"/>
       </svg>
+    </div>
+    <div class="ghost-stage" role="img" aria-label="Ghost Motors icon racing forward with motion trails">
+      <div class="ghost-racer" aria-hidden="true">
+        <img class="ghost-echo" src="favicon.svg" alt="">
+        <img class="ghost-echo second" src="favicon.svg" alt="">
+        <img class="ghost-main" src="favicon.svg" alt="">
+      </div>
     </div>
   </div>
 </section>
@@ -652,31 +689,34 @@
 
 <section id="why">
   <div class="wrap">
-    <div class="why-grid">
-      <div class="why-copy reveal-left">
-        <div class="eyebrow"><i></i> Why Ghost Motors</div>
-        <h2>Built around the transaction, not the marketplace.</h2>
-        <p>We connect consumer vehicles and dealer inventory with the right buyers. Sellers get an advocate to shop offers; dealers get more opportunities and control over each transaction.</p>
+    <div class="why-head reveal">
+      <div class="eyebrow"><i></i> Why Ghost Motors</div>
+      <h2>One network. Two ways to move.</h2>
+      <p>We make the connections. You decide the deal.</p>
+    </div>
+    <div class="network-board reveal" aria-label="How Ghost Motors connects vehicle owners and dealers">
+      <div>
+        <span class="flow-caption">For vehicle owners</span>
+        <div class="flow-lane">
+          <div class="flow-node"><span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 20h24l-3-7c-1-2-3-3-5-3h-8c-2 0-4 1-5 3l-3 7Zm3 0v4m18-4v4M9 24h1m12 0h1M8 16h16"/></svg></span><div><b>Your vehicle</b><small>Share once</small></div></div>
+          <div class="flow-link" aria-hidden="true"></div>
+          <div class="flow-node hub"><span class="flow-icon" aria-hidden="true"><img src="favicon.svg" alt=""></span><div><b>Ghost network</b><small>We shop dealers</small></div></div>
+          <div class="flow-link" aria-hidden="true"></div>
+          <div class="flow-node"><span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 8h17l5 5v11H5V8Zm17 0v6h5M10 17h11M10 21h8"/></svg></span><div><b>Dealer offers</b><small>You choose</small></div></div>
+        </div>
       </div>
-      <div class="why-list stagger reveal">
-        <div class="why-row">
-          <div class="index">01</div>
-          <div><h3>We shop for sellers.</h3><p>Share your vehicle once. We reach out across our <strong>237-dealer network</strong>, compare interest, and bring the options back to you.</p></div>
-        </div>
-        <div class="why-row">
-          <div class="index">02</div>
-          <div><h3>More leads for dealers.</h3><p>We highlight available inventory to relevant dealers and bring new buyer and seller leads to your store.</p></div>
-        </div>
-        <div class="why-row">
-          <div class="index">03</div>
-          <div><h3>Your inventory. Your terms.</h3><p>From sourcing to dealer-to-dealer sales, you decide what to offer, which opportunities to pursue, and whether to close.</p></div>
-        </div>
-        <div class="why-row">
-          <div class="index">04</div>
-          <div><h3>Direct deals, fewer fees.</h3><p>Connect and negotiate directly with other dealers, without the high fees that come with an auction.</p></div>
+      <div>
+        <span class="flow-caption">For dealerships</span>
+        <div class="flow-lane dealer-lane">
+          <div class="flow-node"><span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 13h24l-3-6H7l-3 6Zm2 0v13h20V13M12 26v-8h8v8M8 18h2m12 0h2"/></svg></span><div><b>Your inventory</b><small>Set your terms</small></div></div>
+          <div class="flow-link" aria-hidden="true"></div>
+          <div class="flow-node hub"><span class="flow-icon" aria-hidden="true"><img src="favicon.svg" alt=""></span><div><b>Ghost network</b><small>We bring leads</small></div></div>
+          <div class="flow-link" aria-hidden="true"></div>
+          <div class="flow-node"><span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M3 16h26M7 16V8l9-5 9 5v8M6 16v12h20V16M13 28v-8h6v8M10 12h1m10 0h1"/></svg></span><div><b>Dealer buyers</b><small>Trade directly</small></div></div>
         </div>
       </div>
     </div>
+    <div class="network-note reveal">Direct dealer trades without high auction fees.</div>
   </div>
 </section>
 
@@ -687,7 +727,7 @@
         <div>
           <div class="eyebrow"><i></i> Coming next</div>
           <h2><span>GhostIQ</span><br>Dealer intelligence.</h2>
-          <p>A B2B operating layer for dealerships that turns network data into sourcing decisions, pricing context, inventory opportunities, and automated workflows.</p>
+          <p>See what to source, how to price it, and where demand is moving.</p>
           <div class="feature-line">
             <span>AI sourcing</span><span>Pricing intelligence</span><span>Inventory fit</span><span>Workflow automation</span>
           </div>
