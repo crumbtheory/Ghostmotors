@@ -139,23 +139,15 @@
     position:relative; height:410px; width:min(100%, 930px);
     margin:-42px auto -4px;
   }
-  .ghost-signal {
-    position:absolute; left:11%; top:48px; z-index:3;
-    width:90px; height:90px; display:grid; place-items:center;
-    border:1px solid rgba(213,31,46,.14); border-radius:24px;
-    background:rgba(255,255,255,.9); box-shadow:0 18px 50px rgba(27,47,84,.12);
-    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-    animation:ghost-drift 6s ease-in-out infinite;
+  .speed-lines { position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
+  .speed-line {
+    position:absolute; top:var(--y); left:0; width:var(--w); height:3px; border-radius:999px;
+    background:linear-gradient(90deg,transparent,rgba(45,100,243,.12) 22%,rgba(45,100,243,.68) 74%,transparent);
+    box-shadow:0 0 16px rgba(45,100,243,.15);
+    animation:speed-sweep var(--dur) linear var(--delay) infinite;
   }
-  .ghost-signal::before, .ghost-signal::after {
-    content:""; position:absolute; border:1px solid rgba(213,31,46,.18); border-radius:50%;
-    pointer-events:none;
-  }
-  .ghost-signal::before { width:118px; height:118px; animation:ghost-pulse 4s ease-out infinite; }
-  .ghost-signal::after { width:148px; height:148px; animation:ghost-pulse 4s ease-out 1s infinite; }
-  .ghost-signal img { display:block; width:65px; height:65px; filter:drop-shadow(0 8px 10px rgba(177,0,26,.18)); }
-  @keyframes ghost-drift { 50% { transform:translate(7px,-13px) rotate(-5deg); } }
-  @keyframes ghost-pulse { 0%,100% { opacity:0; transform:scale(.84); } 35% { opacity:.8; } 70% { opacity:0; transform:scale(1.16); } }
+  .speed-line:nth-child(3n) { height:2px; background:linear-gradient(90deg,transparent,rgba(242,201,76,.6),transparent); }
+  @keyframes speed-sweep { from { transform:translateX(980px) skewX(-25deg); opacity:0; } 9%,78% { opacity:1; } to { transform:translateX(-480px) skewX(-25deg); opacity:0; } }
   .halo {
     position:absolute; width:350px; height:350px; border-radius:50%; right:5%; top:18px;
     background:
@@ -174,9 +166,18 @@
     animation:float2 6s ease-in-out infinite;
   }
   .car-stage {
-    position:absolute; inset:18px -8px 0 0; display:flex; align-items:center; justify-content:center;
+    position:absolute; inset:18px -8px 0 0; z-index:2; display:flex; align-items:center; justify-content:center;
+    animation:car-enter 1.05s cubic-bezier(.16,.82,.24,1) both, car-surge 2.8s ease-in-out 1.05s infinite;
   }
   .car-svg { width:100%; max-width:650px; filter:drop-shadow(0 35px 34px rgba(16,23,34,.18)); }
+  .wheel-spin { animation:wheel-roll .6s linear infinite; }
+  .wheel-spin.front { transform-origin:585px 315px; }
+  .wheel-spin.rear { transform-origin:217px 315px; }
+  @keyframes wheel-roll { to { transform:rotate(360deg); } }
+  @keyframes car-enter { from { transform:translate3d(-130px,8px,0) scale(.96); opacity:0; filter:blur(7px); } to { transform:translate3d(0,0,0) scale(1); opacity:1; filter:blur(0); } }
+  @keyframes car-surge { 0%,100% { transform:translate3d(-7px,2px,0) rotate(-.25deg); } 50% { transform:translate3d(10px,-3px,0) rotate(.15deg); } }
+  .road-motion { position:absolute; left:4%; right:4%; bottom:33px; height:5px; z-index:0; opacity:.65; background:repeating-linear-gradient(90deg,rgba(45,100,243,.38) 0 42px,transparent 42px 112px); background-size:336px 5px; animation:road-rush .85s linear infinite; mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent); }
+  @keyframes road-rush { to { background-position:-336px 0; } }
   .route {
     position:absolute; left:8%; right:-8%; bottom:18px; height:90px; border-radius:50%;
     border-bottom:2px solid rgba(45,100,243,.32); transform:rotate(-7deg);
@@ -467,10 +468,8 @@
     .actions { width:100%; flex-direction:column; gap:10px; }
     .actions .btn { width:100%; }
     .visual { height:265px; margin:-8px auto 0; }
-    .ghost-signal { left:5%; top:26px; width:62px; height:62px; border-radius:18px; }
-    .ghost-signal img { width:46px; height:46px; }
-    .ghost-signal::before { width:78px; height:78px; }
-    .ghost-signal::after { width:98px; height:98px; }
+    .speed-line { height:2px; }
+    .road-motion { bottom:30px; }
     .halo { width:245px; height:245px; }
     .car-stage { inset:8px -8px 0 -8px; }
     .trust { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; width:100%; margin-top:18px; }
@@ -512,6 +511,7 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     .reveal { opacity:1; transform:none; }
+    .speed-lines, .road-motion { display:none; }
   }
 </style>
 </head>
@@ -560,8 +560,15 @@
   </div>
 
   <div class="visual reveal on">
+    <div class="speed-lines" aria-hidden="true">
+      <span class="speed-line" style="--y:24%;--w:230px;--dur:1.65s;--delay:-.4s"></span>
+      <span class="speed-line" style="--y:36%;--w:330px;--dur:1.25s;--delay:-1.1s"></span>
+      <span class="speed-line" style="--y:49%;--w:195px;--dur:1.45s;--delay:-.8s"></span>
+      <span class="speed-line" style="--y:68%;--w:275px;--dur:1.15s;--delay:-.2s"></span>
+      <span class="speed-line" style="--y:78%;--w:160px;--dur:1.6s;--delay:-1.3s"></span>
+    </div>
     <div class="halo"></div><div class="sun"></div><div class="orb"></div><div class="route"></div>
-    <div class="ghost-signal" aria-hidden="true"><img src="favicon.svg" alt=""></div>
+    <div class="road-motion" aria-hidden="true"></div>
     <div class="car-stage">
       <svg class="car-svg" viewBox="0 0 760 400" aria-label="Stylized performance car illustration">
         <defs>
@@ -575,8 +582,10 @@
         <path d="M117 271 C265 258 515 254 659 265" fill="none" stroke="url(#blueLine)" stroke-width="7" stroke-linecap="round"/>
         <path d="M544 208 C594 214 628 228 653 251" fill="none" stroke="#f2c94c" stroke-width="4" stroke-linecap="round"/>
         <path d="M134 241 C168 220 203 204 247 194" fill="none" stroke="#d51f2e" stroke-width="3" opacity=".7"/>
-        <ellipse cx="217" cy="315" rx="62" ry="61" fill="#1e2732"/><ellipse cx="217" cy="315" rx="38" ry="38" fill="#778292"/><ellipse cx="217" cy="315" rx="18" ry="18" fill="#dce2e9"/>
-        <ellipse cx="585" cy="315" rx="62" ry="61" fill="#1e2732"/><ellipse cx="585" cy="315" rx="38" ry="38" fill="#778292"/><ellipse cx="585" cy="315" rx="18" ry="18" fill="#dce2e9"/>
+        <ellipse cx="217" cy="315" rx="62" ry="61" fill="#1e2732"/><ellipse cx="217" cy="315" rx="38" ry="38" fill="#778292"/>
+        <g class="wheel-spin rear" stroke="#cdd6e1" stroke-width="6" stroke-linecap="round"><path d="M217 284v62M186 315h62M195 293l44 44M195 337l44-44"/></g><ellipse cx="217" cy="315" rx="18" ry="18" fill="#dce2e9"/>
+        <ellipse cx="585" cy="315" rx="62" ry="61" fill="#1e2732"/><ellipse cx="585" cy="315" rx="38" ry="38" fill="#778292"/>
+        <g class="wheel-spin front" stroke="#cdd6e1" stroke-width="6" stroke-linecap="round"><path d="M585 284v62M554 315h62M563 293l44 44M563 337l44-44"/></g><ellipse cx="585" cy="315" rx="18" ry="18" fill="#dce2e9"/>
         <path d="M94 293 C245 338 552 339 684 296" fill="none" stroke="#101722" stroke-width="8" opacity=".82"/>
       </svg>
     </div>
